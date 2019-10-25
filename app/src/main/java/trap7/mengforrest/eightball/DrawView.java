@@ -5,9 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -47,6 +50,9 @@ class DrawView extends View {
 
     public DrawView(Context context) {
         super(context);
+
+        Ball.cWidth = context.getResources().getDisplayMetrics().widthPixels;
+        Ball.cHeight = context.getResources().getDisplayMetrics().heightPixels;
 
         c = new Ball(bitmapbCue, 8, 500, h + 500);
         speedC = 0;
@@ -223,7 +229,7 @@ class DrawView extends View {
                 break;
 
             case MotionEvent.ACTION_UP:
-                speed = Calculate.distance(c.getX(), c.getY(), touchx, touchy) / 7;
+                speed = Calculate.distance(c.getX(), c.getY(), touchx, touchy) / 10;
                 angle = 180 + (float) Math.toDegrees(Math.atan2(c.getY() - touchy, c.getX() - touchx));
                 c.setAngle(angle);
                 c.setSpeed(speed);

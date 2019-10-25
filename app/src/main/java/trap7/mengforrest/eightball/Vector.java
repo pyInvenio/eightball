@@ -11,6 +11,13 @@ public class Vector {
         this.speedy = s * Math.sin(Math.toRadians(a));
     }
 
+    public Vector(double x1, double y1, double x2, double y2) {
+        this.angle = Math.toDegrees(Math.atan2(y1 - y2, x1 - x2));
+        this.speed = Calculate.distance(x1, y1, x2, y2);
+        this.speedx = this.speed * Math.cos(Math.toRadians(this.angle));
+        this.speedy = this.speed * Math.sin(Math.toRadians(this.angle));
+    }
+
     public double getAngle() {
         return angle;
     }
