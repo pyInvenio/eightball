@@ -36,7 +36,7 @@ public class Ball {
     public void draw(final Canvas canvas) {
         color = Bitmap.createScaledBitmap(color, BALL_RADIUS * 2, BALL_RADIUS * 2, true);
         canvas.drawBitmap(color, (float) x - BALL_RADIUS, (float) y - BALL_RADIUS, null);
-        canvas.drawLine((float) x, (float) y, (float) (x - ballV.getSpeedx() * 10), (float) (y + ballV.getSpeedy() * 10), p);
+        canvas.drawLine((float) x, (float) y, (float) (x + ballV.getSpeedx() * 10), (float) (y + ballV.getSpeedy() * 10), p);
 
     }
 
@@ -93,6 +93,10 @@ public class Ball {
     }
 
     public void setX(double x) {
+        // Make sure the ball is inside the box
+        if (x < BALL_RADIUS) x = BALL_RADIUS;
+        if (x > cWidth - BALL_RADIUS) x = cWidth - BALL_RADIUS;
+
         this.x = x;
     }
 
@@ -105,6 +109,10 @@ public class Ball {
     }
 
     public void setY(double y) {
+        // Make sure the ball is inside the box
+        if (y < BALL_RADIUS) y = BALL_RADIUS;
+        if (y > cHeight - BALL_RADIUS) y = cHeight - BALL_RADIUS;
+
         this.y = y;
     }
 
@@ -183,12 +191,16 @@ public class Ball {
     }
 
     public boolean isCollideWallX() {
+        if (this.ballV.speed <= 0) return false;
+
         if (this.y - BALL_RADIUS <= 0 || this.y + BALL_RADIUS >= cHeight)
             return true;
         return false;
     }
 
     public boolean isCollideWallY() {
+        if (this.ballV.speed <= 0) return false;
+
         if (this.x - BALL_RADIUS <= 0 || this.x + BALL_RADIUS >= cWidth)
             return true;
         return false;
@@ -196,25 +208,21 @@ public class Ball {
 
     public void lessSpeed(double r) {
         ballV.setSpeed(ballV.getSpeed() * r);
-
     }
 
     public void changeSpeed() {
         this.lessSpeed(0.99);
-
     }
 
     public void update() {
         if (isCollideWallY()) {
+            System.out.println("Ball " + this.number + " collides wall Y.");
             ballV.setSpeedx(-ballV.getSpeedx());
         }
         if (isCollideWallX()) {
+            System.out.println("Ball " + this.number + " collides wall X.");
             ballV.setSpeedy(-ballV.getSpeedy());
         }
-        if (isCollideWallX())
-            System.out.println(isCollideWallX());
-        if (isCollideWallY())
-            System.out.println(isCollideWallY());
 
         x += ballV.getSpeedx();
         y += ballV.getSpeedy();

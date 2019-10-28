@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,11 +22,14 @@ import trap7.mengforrest.eightball.R;
 
 import static android.graphics.Color.BLUE;
 import static android.graphics.Color.GREEN;
+import static android.graphics.Color.RED;
 
 class DrawView extends View {
     Ball b8, b1, b2, b3, b4, b5, b6, b7, b9, b10, b11, b12, b13, b14, b15;
     Ball c;
     static final int BALL_RADIUS = 30;
+
+    boolean drawLine;
 
     double speed8, angle8, speed1, angle1, speed2, angle2, speed3, angle3, speed4, angle4, speed5, angle5, speed6, angle6, speed7, angle7, speed9, angle9, speed10, angle10, speed11, angle11, speed12, angle12, speed13, angle13, speed14, angle14, speed15, angle15;
     double speedC, angleC;
@@ -51,55 +56,52 @@ class DrawView extends View {
     public DrawView(Context context) {
         super(context);
 
-        Ball.cWidth = context.getResources().getDisplayMetrics().widthPixels;
-        Ball.cHeight = context.getResources().getDisplayMetrics().heightPixels;
-
-        c = new Ball(bitmapbCue, 8, 500, h + 500);
+        c = new Ball(bitmapbCue, 0, 500, h + 500);
         speedC = 0;
         angleC = 0;
-        b1 = new Ball(bitmapb1, 8, w / 2, h);
+        b1 = new Ball(bitmapb1, 1, w / 2, h);
         speed1 = 0;
         angle1 = 0;
-        b2 = new Ball(bitmapb2, 8, w / 2 + 66, h);
+        b2 = new Ball(bitmapb2, 2, w / 2 + 66, h);
         speed2 = 0;
         angle2 = 0;
-        b3 = new Ball(bitmapb3, 8, w / 2 + 132, h);
+        b3 = new Ball(bitmapb3, 3, w / 2 + 132, h);
         speed3 = 0;
         angle3 = 0;
-        b4 = new Ball(bitmapb4, 8, w / 2 - 66, h);
+        b4 = new Ball(bitmapb4, 4, w / 2 - 66, h);
         speed4 = 0;
         angle4 = 0;
-        b5 = new Ball(bitmapb5, 8, w / 2 - 132, h);
+        b5 = new Ball(bitmapb5, 5, w / 2 - 132, h);
         speed5 = 0;
         angle5 = 0;
-        b6 = new Ball(bitmapb6, 8, w / 2 - 33, h + 66);
+        b6 = new Ball(bitmapb6, 6, w / 2 - 33, h + 66);
         speed6 = 0;
         angle6 = -0;
-        b7 = new Ball(bitmapb7, 8, w / 2 + 33, h + 66);
+        b7 = new Ball(bitmapb7, 7, w / 2 + 33, h + 66);
         speed7 = 0;
         angle7 = 0;
         b8 = new Ball(bitmapb8, 8, w / 2 - 99, h + 66);
         speed8 = 0;
         angle8 = 0;
-        b9 = new Ball(bitmapb9, 8, w / 2 + 99, h + 66);
+        b9 = new Ball(bitmapb9, 9, w / 2 + 99, h + 66);
         speed9 = 0;
         angle9 = 0;
-        b10 = new Ball(bitmapb10, 8, w / 2, h + 132);
+        b10 = new Ball(bitmapb10, 10, w / 2, h + 132);
         speed10 = 0;
         angle10 = 0;
-        b11 = new Ball(bitmapb11, 8, w / 2 - 66, h + 132);
+        b11 = new Ball(bitmapb11, 11, w / 2 - 66, h + 132);
         speed11 = 0;
         angle11 = 0;
-        b12 = new Ball(bitmapb12, 8, w / 2 + 66, h + 132);
+        b12 = new Ball(bitmapb12, 12, w / 2 + 66, h + 132);
         speed12 = 0;
         angle12 = 0;
-        b13 = new Ball(bitmapb13, 8, w / 2 - 33, h + 198);
+        b13 = new Ball(bitmapb13, 13, w / 2 - 33, h + 198);
         speed13 = 0;
         angle13 = 0;
-        b14 = new Ball(bitmapb14, 8, w / 2 + 33, h + 198);
+        b14 = new Ball(bitmapb14, 14, w / 2 + 33, h + 198);
         speed14 = 0;
         angle14 = 0;
-        b15 = new Ball(bitmapb15, 8, w / 2, h + 198 + 66);
+        b15 = new Ball(bitmapb15, 15, w / 2, h + 198 + 66);
         speed15 = 0;
         angle15 = 0;
         b1.setSpeed(speed1);
@@ -149,6 +151,11 @@ class DrawView extends View {
         balls.add(b13);
         balls.add(b14);
         balls.add(b15);
+
+
+        Ball.cWidth = context.getResources().getDisplayMetrics().widthPixels;
+        // By default, the height of title bar is 72dp and the height for status bar is 24dp
+        Ball.cHeight = context.getResources().getDisplayMetrics().heightPixels;
     }
 
     public ArrayList<Ball> changeBalls(ArrayList<Ball> balls) {
@@ -175,11 +182,11 @@ class DrawView extends View {
         return true;
     }
 
-    public void drawLine(Canvas canvas, float x, float y) {
+    public void drawLine(Canvas canvas, float x, float y, int color) {
         Paint p = new Paint();
-        p.setColor(BLUE);
+        p.setColor(color);
         p.setStrokeWidth(5.0f);
-        canvas.drawLine((float) c.getX() + BALL_RADIUS, (float) c.getY() + BALL_RADIUS, x, y, p);
+        canvas.drawLine((float) c.getX(), (float) c.getY(), x, y, p);
 
     }
 
@@ -208,7 +215,8 @@ class DrawView extends View {
                 bArray.get(i).isCollideBall(bArray.get(i1));
             }
         }
-        drawLine(canvas, touchx, touchy);
+        if (drawLine)
+            drawLine(canvas, touchx, touchy, c.getSpeed() <= 0.1 ? BLUE : RED);
         for (Ball b : bArray) {
             b.draw(canvas);
             b.update();
@@ -224,13 +232,21 @@ class DrawView extends View {
         double angle, speed;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                drawLine = true;
                 touchx = event.getX();
                 touchy = event.getY();
                 break;
-
+            case MotionEvent.ACTION_MOVE:
+                touchx = event.getX();
+                touchy = event.getY();
+                break;
             case MotionEvent.ACTION_UP:
-                speed = Calculate.distance(c.getX(), c.getY(), touchx, touchy) / 10;
-                angle = 180 + (float) Math.toDegrees(Math.atan2(c.getY() - touchy, c.getX() - touchx));
+                drawLine = false;
+                if (c.getSpeed() > 0.1)
+                    break;
+                speed = Calculate.distance(c.getX(), c.getY(), touchx, touchy) / 20;
+                //angle = 180 + (float) Math.toDegrees(Math.atan2(c.getY() - touchy, c.getX() - touchx));
+                angle = (float) Math.toDegrees(Math.atan2(touchy - c.getY(), touchx - c.getX()));
                 c.setAngle(angle);
                 c.setSpeed(speed);
                 touchx = (float) c.getX();

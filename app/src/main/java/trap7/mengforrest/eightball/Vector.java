@@ -60,13 +60,15 @@ public class Vector {
     public void setSpeedx(double speedx) {
         this.speedx = speedx;
         this.speed = Math.sqrt(this.speedx * this.speedx + this.speedy * this.speedy);
-        this.angle = 180 + Math.atan2(this.speedy, this.speedx);
+        //this.angle = 180 + Math.atan2(this.speedy, this.speedx);
+        this.angle = (float) Math.toDegrees(Math.atan2(this.speedy, this.speedx));
     }
 
     public void setSpeedy(double speedy) {
         this.speedy = speedy;
         this.speed = Math.sqrt(this.speedx * this.speedx + this.speedy * this.speedy);
-        this.angle = 180 + Math.atan2(this.speedy, this.speedx);
+        //this.angle = 180 + Math.atan2(this.speedy, this.speedx);
+        this.angle = (float) Math.toDegrees(Math.atan2(this.speedy, this.speedx));
     }
 
     public double angleBetween(Vector v) {
