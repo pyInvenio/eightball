@@ -1,5 +1,6 @@
 package trap7.mengforrest.eightball;
 
+import android.bluetooth.BluetoothA2dp;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -28,7 +30,7 @@ class DrawView extends View {
     Ball b8, b1, b2, b3, b4, b5, b6, b7, b9, b10, b11, b12, b13, b14, b15;
     Ball c;
     static final int BALL_RADIUS = 30;
-
+    Gutter gutter1, gutter2, gutter3, gutter4, gutter5, gutter6;
     boolean drawLine;
 
     double speed8, angle8, speed1, angle1, speed2, angle2, speed3, angle3, speed4, angle4, speed5, angle5, speed6, angle6, speed7, angle7, speed9, angle9, speed10, angle10, speed11, angle11, speed12, angle12, speed13, angle13, speed14, angle14, speed15, angle15;
@@ -51,11 +53,21 @@ class DrawView extends View {
     Bitmap bitmapb14 = BitmapFactory.decodeResource(getResources(), R.drawable.fourteenball);
     Bitmap bitmapb15 = BitmapFactory.decodeResource(getResources(), R.drawable.fifteenball);
     Bitmap bitmapbCue = BitmapFactory.decodeResource(getResources(), R.drawable.cueball);
+    Bitmap bitmapGutter = BitmapFactory.decodeResource(getResources(), R.drawable.gutter);
     int w, h;
-
+    ArrayList<Gutter> gutterArray = new ArrayList<>();
     public DrawView(Context context) {
-        super(context);
 
+
+        super(context);
+        w = context.getResources().getDisplayMetrics().widthPixels;
+        h = context.getResources().getDisplayMetrics().heightPixels;
+        gutter1 = new Gutter(bitmapGutter, 0, 0);
+        gutter2 = new Gutter(bitmapGutter, w, 0);
+        gutter3 = new Gutter(bitmapGutter, 0, h);
+        gutter4 = new Gutter(bitmapGutter, w, h);
+        gutter5 = new Gutter(bitmapGutter, 0, h / 2);
+        gutter6 = new Gutter(bitmapGutter, w, h / 2);
         c = new Ball(bitmapbCue, 0, 500, h + 500);
         speedC = 0;
         angleC = 0;
@@ -156,6 +168,12 @@ class DrawView extends View {
         Ball.cWidth = context.getResources().getDisplayMetrics().widthPixels;
         // By default, the height of title bar is 72dp and the height for status bar is 24dp
         Ball.cHeight = context.getResources().getDisplayMetrics().heightPixels;
+        gutterArray.add(gutter1);
+        gutterArray.add(gutter2);
+        gutterArray.add(gutter3);
+        gutterArray.add(gutter4);
+        gutterArray.add(gutter5);
+        gutterArray.add(gutter6);
     }
 
     public ArrayList<Ball> changeBalls(ArrayList<Ball> balls) {
@@ -168,11 +186,17 @@ class DrawView extends View {
                 while (!isNotOverlap(balls.get(i), balls.get(j))) {
                     balls.get(i).setX(w * Math.random());
                     balls.get(i).setY(h * Math.random());
+                    balls.get(i).setSpeed(0);
+                    balls.get(i).setSpeedy(0);
+                    balls.get(i).setSpeedy(0);
                 }
             }
             newBalls.add(balls.get(i));
         }
         newBalls.add(c);
+        c.setSpeed(0);
+        c.setX(w * Math.random());
+        c.setY(h * Math.random());
         return newBalls;
     }
 
@@ -196,6 +220,8 @@ class DrawView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        boolean moving = false;
+        canvas.drawColor(getResources().getColor(R.color.darkGreen));
         w = canvas.getWidth();
         h = canvas.getHeight();
         if (created == false) {
@@ -215,8 +241,39 @@ class DrawView extends View {
                 bArray.get(i).isCollideBall(bArray.get(i1));
             }
         }
+        ArrayList<Integer> ballsToRemove = new ArrayList<>();
+        for (int i = 0; i < bArray.size(); i++) {
+            for (Gutter g : gutterArray) {
+                if (g.ballisGutted(bArray.get(i))) {
+                    if (bArray.get(i).getNumber() != 0) {
+                        if (bArray.size() - 1 == 1) {
+                            Toast.makeText(super.getContext(), "Ball " + bArray.get(i).getNumber() + " gutted! You Win!", Toast.LENGTH_SHORT).show();
+                            created = false;
+                            break;
+                        } else
+                            Toast.makeText(super.getContext(), "Ball " + bArray.get(i).getNumber() + " gutted!", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        Toast.makeText(super.getContext(), "You gutted the cue ball!", Toast.LENGTH_SHORT).show();
+                        created = false;
+                        break;
+                    }
+                    ballsToRemove.add(i);
+                }
+            }
+        }
+        for (int i : ballsToRemove) {
+            bArray.get(i).setSpeed(0);
+            bArray.remove(i);
+        }
+
+        for (Ball b : bArray)
+            if (b.getSpeed() > 0.06)
+                moving = true;
         if (drawLine)
-            drawLine(canvas, touchx, touchy, c.getSpeed() <= 0.1 ? BLUE : RED);
+            drawLine(canvas, touchx, touchy, !moving ? getResources().getColor(R.color.blueLine) : RED);
+        for (Gutter g : gutterArray)
+            g.draw(canvas);
         for (Ball b : bArray) {
             b.draw(canvas);
             b.update();

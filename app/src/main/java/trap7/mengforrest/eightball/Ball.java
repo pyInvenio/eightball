@@ -153,8 +153,8 @@ public class Ball {
         double va2 = (b.getVector().getSpeedx() * ax + b.getVector().getSpeedy() * ay);
         double vb2 = (-b.getVector().getSpeedx() * ay + b.getVector().getSpeedy() * ay) * ax;
 // New velocities in these axes (after collision): ed<=1,  for elastic collision ed=1
-        double ed = .7;
-        double vaP1 = va1 + (1 + ed) * (va2 - va1) / (2);
+        double ed = .9;
+        double vaP1 = va1 + (1 + ed) * (va2 - va1) / 2;
         double vaP2 = va2 + (1 + ed) * (va1 - va2) / (2);
 // Undo the projections
         ballV.setSpeedx(vaP1 * ax - vb1 * ay);
