@@ -1,15 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/darkerGreen">
 
-
+    <TextView
+        android:id="@+id/highText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/startBtn"
+        android:layout_marginBottom="40dp"
+        android:textSize="40dp"
+        android:textColor="@color/darkGreen"
+        android:gravity="center" />
     <Button
         android:id="@+id/startBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="500dp"
-        android:text="Start" />
-</RelativeLayout>
+        android:layout_marginBottom="10dp"
+        android:background="@color/darkGreen"
+        android:text="Start"
+        android:textColor="#D4E9FF"
+        app:layout_constraintBottom_toTopOf="@id/helpBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="20dp"
+        android:onClick="start" />
+
+    <Button
+        android:id="@+id/helpBtn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/darkGreen"
+        android:text="How to play"
+        android:textColor="#D4E9FF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="20dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
