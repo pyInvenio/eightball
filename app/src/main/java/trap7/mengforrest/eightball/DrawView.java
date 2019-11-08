@@ -360,7 +360,9 @@ class DrawView extends View {
     public void editPrefs() {
 
         editor = pref.edit();
-        if (score < pref.getInt("highscore", -1))
+        if (pref.getInt("highscore", -1) == 0)
+            editor.putInt("highscore", score);
+        else if (score < pref.getInt("highscore", -1))
             editor.putInt("highscore", score);
         editor.apply();
     }
