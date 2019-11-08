@@ -273,19 +273,20 @@ class DrawView extends View {
                 if (g.ballisGutted(bArray.get(i))) {
                     if (bArray.get(i).getNumber() != 0) {
                         if (bArray.size() - 1 == 1) {
-                            Toast.makeText(super.getContext(), "Ball " + bArray.get(i).getNumber() + " gutted! You Win!", Toast.LENGTH_SHORT).show();
-                            created = false;
+
                             editPrefs();
                             Intent sendIntent = new Intent(this.getContext(), MainActivity.class);
                             this.getContext().startActivity(sendIntent);
+                            Toast.makeText(super.getContext(), "Ball " + bArray.get(i).getNumber() + " potted! You Win!", Toast.LENGTH_SHORT).show();
+
                             break;
                         } else
-                            Toast.makeText(super.getContext(), "Ball " + bArray.get(i).getNumber() + " gutted!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(super.getContext(), "Ball " + bArray.get(i).getNumber() + " potted!", Toast.LENGTH_SHORT).show();
                     } else {
 
                         Intent sendIntent = new Intent(this.getContext(), MainActivity.class);
                         this.getContext().startActivity(sendIntent);
-                        Toast.makeText(super.getContext(), "You gutted the cue ball!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(super.getContext(), "You potted the cue ball!", Toast.LENGTH_SHORT).show();
                         score = 0;
                         created = false;
 
@@ -334,7 +335,11 @@ class DrawView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 drawLine = false;
-                if (c.getSpeed() > 0.1)
+                boolean moving = false;
+                for (Ball b : bArray)
+                    if (b.getSpeed() > 0.06)
+                        moving = true;
+                if (moving)
                     break;
                 speed = Calculate.distance(c.getX(), c.getY(), touchx, touchy) / 20;
                 //angle = 180 + (float) Math.toDegrees(Math.atan2(c.getY() - touchy, c.getX() - touchx));
@@ -355,7 +360,7 @@ class DrawView extends View {
     public void editPrefs() {
 
         editor = pref.edit();
-        if (score > pref.getInt("highscore", -1))
+        if (score < pref.getInt("highscore", -1))
             editor.putInt("highscore", score);
         editor.apply();
     }
