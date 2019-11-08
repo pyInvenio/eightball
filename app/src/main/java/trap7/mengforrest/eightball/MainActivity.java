@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void start(View v) {
         setContentView(new DrawView(this));
+        startBtn.setClickable(false);
     }
 
     protected void onPause() {
